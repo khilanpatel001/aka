@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Family Registry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --accent: #f59e0b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-box h2 {
+            margin-bottom: 30px;
+            color: var(--text);
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .login-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .error-msg {
+            color: #ef4444;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Main App */
+        #mainApp {
+            display: none;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #0f172a;
+            margin: 0;
+        }
+
+        .header-center {
+            flex: 1;
+            text-align: center;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Add Member Button */
+        .add-member-btn {
+            padding: 12px 24px;
+            background: #059669;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .add-member-btn:hover {
+            background: #047857;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #94a3b8;
+        }
+
+        .close-btn:hover {
+            color: #1e293b;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background: #1d4ed8;
+        }
+
+        /* Search Section */
+        .search-box {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary);
+        }
+
+        /* Grid Layout */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Result Cards */
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            border: 1px solid #f1f5f9;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 15px;
+        }
+
+        .avatar-circle {
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .info-row i {
+            width: 25px;
+            color: var(--primary);
+            margin-right: 10px;
+            font-size: 0.9rem;
+        }
+
+        .label {
+            font-weight: 600;
+            width: 140px;
+            color: var(--secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        /* Sidebar/Upcoming Section */
+        .sidebar-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 16px;
+            height: fit-content;
+            border: 1px solid #e2e8f0;
+        }
+
+        .sidebar-card h3 {
+            margin-top: 0;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .event-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.9rem;
+        }
+
+        .event-item:last-child { border: 0; }
+
+        .tag {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #fef3c7;
+            color: #92400e;
+            font-weight: 600;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div id="loginScreen" class="login-container">
+    <div class="login-box">
+        <i class="fas fa-tree fa-3x" style="color: #059669; margin-bottom: 20px;"></i>
+        <h2>Family Archive Login</h2>
+        <input type="text" id="username" placeholder="Username" autocomplete="username">
+        <input type="password" id="password" placeholder="Password" autocomplete="current-password">
+        <button class="login-btn" onclick="login()">Login</button>
+        <div class="error-msg" id="errorMsg">Invalid credentials. Try again.</div>
+    </div>
+</div>
+
+<!-- Main Application -->
+<div id="mainApp">
+    <div class="container">
+        <header>
+            <div></div>
+            <div class="header-center">
+                <h1><i class="fas fa-tree" style="color: #059669;"></i> Family Archive</h1>
+                <p>Digital Directory & Heritage Tracker</p>
+            </div>
+            <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </header>
+
+        <button class="add-member-btn" onclick="openModal()">
+            <i class="fas fa-user-plus"></i> Add Family Member
+        </button>
+
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="search" placeholder="Enter name (e.g., Rohit, Kulkarni...)">
+        </div>
+
+        <div class="main-grid">
+            <div id="resultsArea">
+                <div id="emptyState" style="text-align: center; padding: 40px; color: #94a3b8;">
+                    <i class="fas fa-users-rays fa-3x" style="margin-bottom:15px;"></i>
+                    <p>Search for a family member to view details</p>
+                </div>
+                <div id="personCard" class="card hidden"></div>
+            </div>
+
+            <div class="sidebar">
+                <div class="sidebar-card">
+                    <h3><i class="fas fa-cake-candles" style="color:var(--accent)"></i> This Month</h3>
+                    <div id="upcomingEvents"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Member Modal -->
+<div id="addMemberModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Add New Family Member</h2>
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+        </div>
+        <form id="addMemberForm">
+            <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" id="newName" required>
+            </div>
+            <div class="form-group">
+                <label>Date of Birth (DD-MM-YYYY) *</label>
+                <input type="text" id="newDob" placeholder="05-12-1990" required>
+            </div>
+            <div class="form-group">
+                <label>Marriage Date (DD-MM-YYYY)</label>
+                <input type="text" id="newMarriage" placeholder="31-01-2020">
+            </div>
+            <div class="form-group">
+                <label>Partner Name</label>
+                <input type="text" id="newPartner">
+            </div>
+            <div class="form-group">
+                <label>Children (comma separated)</label>
+                <input type="text" id="newChildren" placeholder="Child1, Child2">
+            </div>
+            <button type="submit" class="submit-btn">Add Member</button>
+        </form>
+    </div>
+</div>
+
+<script>
+// Initial family data
+const defaultFamilyData = [
+    { name: "Rohit Rajhans", dob: "05-12-1990", marriage: "31-01-2020", partner: "Pratiksha Rajhans", children: "Shailja Rajhans" },
+    { name: "Pratiksha Rajhans", dob: "09-08-2001", marriage: "31-01-2020", partner: "Rohit Rajhans", children: "Shailja Rajhans" },
+    { name: "Aishwarya Bhale", dob: "21-11-1994", marriage: "31-12-2018", partner: "Saurabh Khekhale", children: "Mishkaa" },
+    { name: "Saurabh Khekhale", dob: "11-03-1993", marriage: "31-12-2018", partner: "Aishwarya Bhale", children: "Mishkaa" },
+    { name: "Neelakshi", dob: "15-09-1995", marriage: "24-12-2021", partner: "Pranav", children: "Jui" },
+    { name: "Anil Kulkarni", dob: "07-05-1970", marriage: "22-01-1999", partner: "Anjali Kulkarni", children: "Angha, Pratiksha, Anandi, Chitamani" },
+    { name: "Ajinkya", dob: "28-04-1992", marriage: "19-07-2018", partner: "Geetanjali Rajhans", children: "None" }
+];
+
+// Load family data from memory or use default
+let familyData = [...defaultFamilyData];
+
+// Login credentials
+const VALID_USERNAME = "Family";
+const VALID_PASSWORD = "Family@123";
+
+// Login function
+function login() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const errorMsg = document.getElementById("errorMsg");
+
+    if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("mainApp").style.display = "block";
+        loadEvents();
+    } else {
+        errorMsg.style.display = "block";
+    }
+}
+
+// Logout function
+function logout() {
+    document.getElementById("mainApp").style.display = "none";
+    document.getElementById("loginScreen").style.display = "flex";
+    document.getElementById("username").value = "";
+    document.getElementById("password").value = "";
+    document.getElementById("errorMsg").style.display = "none";
+}
+
+// Modal functions
+function openModal() {
+    document.getElementById("addMemberModal").style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("addMemberModal").style.display = "none";
+    document.getElementById("addMemberForm").reset();
+}
+
+// Add member form submission
+document.getElementById("addMemberForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    
+    const newMember = {
+        name: document.getElementById("newName").value,
+        dob: document.getElementById("newDob").value,
+        marriage: document.getElementById("newMarriage").value || "N/A",
+        partner: document.getElementById("newPartner").value || "N/A",
+        children: document.getElementById("newChildren").value || "None"
+    };
+    
+    familyData.push(newMember);
+    closeModal();
+    loadEvents();
+    alert(`${newMember.name} has been added to the family archive!`);
+});
+
+// Search functionality
+const searchInput = document.getElementById("search");
+const resultsArea = document.getElementById("personCard");
+const emptyState = document.getElementById("emptyState");
+const eventsContainer = document.getElementById("upcomingEvents");
+
+searchInput.addEventListener("input", () => {
+    const val = searchInput.value.toLowerCase();
+    const person = familyData.find(p => p.name.toLowerCase().includes(val));
+
+    if (person && val !== "") {
+        emptyState.classList.add("hidden");
+        resultsArea.classList.remove("hidden");
+        
+        const initials = person.name.split(' ').map(n => n[0]).join('');
+        
+        resultsArea.innerHTML = `
+            <div class="card-header">
+                <div class="avatar-circle">${initials}</div>
+                <div>
+                    <h2 style="margin:0">${person.name}</h2>
+                    <span style="font-size:0.8rem; color:var(--secondary)">Family Member ID: #00${Math.floor(Math.random()*100)}</span>
+                </div>
+            </div>
+            <div class="info-row"><i class="fas fa-calendar"></i><span class="label">Date of Birth</span><span>${person.dob}</span></div>
+            <div class="info-row"><i class="fas fa-ring"></i><span class="label">Anniversary</span><span>${person.marriage}</span></div>
+            <div class="info-row"><i class="fas fa-heart"></i><span class="label">Spouse</span><span>${person.partner}</span></div>
+            <div class="info-row"><i class="fas fa-child"></i><span class="label">Children</span><span>${person.children}</span></div>
+        `;
+    } else {
+        resultsArea.classList.add("hidden");
+        emptyState.classList.remove("hidden");
+    }
+});
+
+// Load upcoming events
+function loadEvents() {
+    const currentMonth = new Date().getMonth() + 1;
+    let html = "";
+
+    familyData.forEach(p => {
+        const bMonth = parseInt(p.dob.split('-')[1]);
+        const mMonth = p.marriage !== "N/A" ? parseInt(p.marriage.split('-')[1]) : null;
+
+        if(bMonth === currentMonth) {
+            html += `<div class="event-item">🎂 <b>${p.name.split(' ')[0]}</b>'s Birthday <span class="tag">Jan ${p.dob.split('-')[0]}</span></div>`;
+        }
+        if(mMonth === currentMonth) {
+            html += `<div class="event-item">💍 <b>${p.name.split(' ')[0]}</b>'s Anniversary <span class="tag">Jan ${p.marriage.split('-')[0]}</span></div>`;
+        }
+    });
+
+    eventsContainer.innerHTML = html || "<p style='color:grey; font-size:0.8rem;'>No events this month</p>";
+}
+
+// Allow Enter key to login
+document.getElementById("password").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") login();
+});
+</script>
+
+</body>
+</html>
